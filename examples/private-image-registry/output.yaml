@@ -88,13 +88,13 @@ metadata:
   name: k8smon-prometheus-node-exporter
   namespace: default
   labels:
-    helm.sh/chart: prometheus-node-exporter-4.39.0
+    helm.sh/chart: prometheus-node-exporter-4.49.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
     app.kubernetes.io/part-of: prometheus-node-exporter
     app.kubernetes.io/name: prometheus-node-exporter
     app.kubernetes.io/instance: k8smon
-    app.kubernetes.io/version: "1.8.2"
+    app.kubernetes.io/version: "1.10.2"
     release: k8smon
 automountServiceAccountToken: false
 imagePullSecrets:  
@@ -67715,13 +67715,13 @@ metadata:
   name: k8smon-prometheus-node-exporter
   namespace: default
   labels:
-    helm.sh/chart: prometheus-node-exporter-4.39.0
+    helm.sh/chart: prometheus-node-exporter-4.49.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
     app.kubernetes.io/part-of: prometheus-node-exporter
     app.kubernetes.io/name: prometheus-node-exporter
     app.kubernetes.io/instance: k8smon
-    app.kubernetes.io/version: "1.8.2"
+    app.kubernetes.io/version: "1.10.2"
     release: k8smon
 spec:
   type: ClusterIP
@@ -67889,13 +67889,13 @@ metadata:
   name: k8smon-prometheus-node-exporter
   namespace: default
   labels:
-    helm.sh/chart: prometheus-node-exporter-4.39.0
+    helm.sh/chart: prometheus-node-exporter-4.49.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
     app.kubernetes.io/part-of: prometheus-node-exporter
     app.kubernetes.io/name: prometheus-node-exporter
     app.kubernetes.io/instance: k8smon
-    app.kubernetes.io/version: "1.8.2"
+    app.kubernetes.io/version: "1.10.2"
     release: k8smon
 spec:
   selector:
@@ -67913,13 +67913,13 @@ spec:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
         k8s.grafana.com/logs.job: integrations/node_exporter
       labels:
-        helm.sh/chart: prometheus-node-exporter-4.39.0
+        helm.sh/chart: prometheus-node-exporter-4.49.2
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: metrics
         app.kubernetes.io/part-of: prometheus-node-exporter
         app.kubernetes.io/name: prometheus-node-exporter
         app.kubernetes.io/instance: k8smon
-        app.kubernetes.io/version: "1.8.2"
+        app.kubernetes.io/version: "1.10.2"
         release: k8smon
     spec:
       automountServiceAccountToken: false
@@ -67931,7 +67931,7 @@ spec:
       serviceAccountName: k8smon-prometheus-node-exporter
       containers:
         - name: node-exporter
-          image: my.registry.com/prometheus/node-exporter:v1.8.2
+          image: my.registry.com/prometheus/node-exporter:v1.10.2
           imagePullPolicy: IfNotPresent
           args:
             - --path.procfs=/host/proc
@@ -67953,7 +67953,7 @@ spec:
             httpGet:
               httpHeaders:
               path: /
-              port: 9100
+              port: metrics
               scheme: HTTP
             initialDelaySeconds: 0
             periodSeconds: 10
@@ -67964,7 +67964,7 @@ spec:
             httpGet:
               httpHeaders:
               path: /
-              port: 9100
+              port: metrics
               scheme: HTTP
             initialDelaySeconds: 0
             periodSeconds: 10
