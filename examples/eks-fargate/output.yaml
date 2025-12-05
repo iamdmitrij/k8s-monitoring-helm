@@ -2,15 +2,15 @@
 # Source: k8s-monitoring/charts/alloy-events/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
+automountServiceAccountToken: true
 metadata:
   name: k8smon-alloy-events
   namespace: default
   labels:
-    helm.sh/chart: alloy-events-0.6.1
+    helm.sh/chart: alloy-events-1.5.0
     app.kubernetes.io/name: alloy-events
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
@@ -18,15 +18,15 @@ metadata:
 # Source: k8s-monitoring/charts/alloy-logs/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
+automountServiceAccountToken: true
 metadata:
   name: k8smon-alloy-logs
   namespace: default
   labels:
-    helm.sh/chart: alloy-logs-0.6.1
+    helm.sh/chart: alloy-logs-1.5.0
     app.kubernetes.io/name: alloy-logs
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
@@ -34,15 +34,15 @@ metadata:
 # Source: k8s-monitoring/charts/alloy/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
+automountServiceAccountToken: true
 metadata:
   name: k8smon-alloy
   namespace: default
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
@@ -66751,99 +66751,113 @@ kind: ClusterRole
 metadata:
   name: k8smon-alloy-events
   labels:
-    helm.sh/chart: alloy-events-0.6.1
+    helm.sh/chart: alloy-events-1.5.0
     app.kubernetes.io/name: alloy-events
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
 rules:
-  # Rules which allow discovery.kubernetes to function.
   - apiGroups:
-      - ""
-      - "discovery.k8s.io"
-      - "networking.k8s.io"
+    - ""
+    - discovery.k8s.io
+    - networking.k8s.io
     resources:
-      - endpoints
-      - endpointslices
-      - ingresses
-      - nodes
-      - nodes/proxy
-      - nodes/metrics
-      - pods
-      - services
+    - endpoints
+    - endpointslices
+    - ingresses
+    - pods
+    - services
     verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow loki.source.kubernetes and loki.source.podlogs to work.
+    - get
+    - list
+    - watch
   - apiGroups:
-      - ""
+    - ""
     resources:
-      - pods
-      - pods/log
-      - namespaces
+    - pods
+    - pods/log
+    - namespaces
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
   - apiGroups:
-      - "monitoring.grafana.com"
+    - monitoring.grafana.com
     resources:
-      - podlogs
+    - podlogs
     verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow mimir.rules.kubernetes to work.
-  - apiGroups: ["monitoring.coreos.com"]
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
     resources:
-      - prometheusrules
+    - prometheusrules
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - alertmanagerconfigs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - podmonitors
+    - servicemonitors
+    - probes
+    - scrapeconfigs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - events
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    - secrets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - apps
+    - extensions
+    resources:
+    - replicasets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - nodes
+    - nodes/proxy
+    - nodes/metrics
+    verbs:
+    - get
+    - list
+    - watch
   - nonResourceURLs:
-      - /metrics
+    - /metrics
     verbs:
-      - get
-  # Rules for prometheus.kubernetes.*
-  - apiGroups: ["monitoring.coreos.com"]
-    resources:
-      - podmonitors
-      - servicemonitors
-      - probes
-    verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow eventhandler to work.
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - get
-      - list
-      - watch
-  # needed for remote.kubernetes.*
-  - apiGroups: [""]
-    resources:
-      - "configmaps"
-      - "secrets"
-    verbs:
-      - get
-      - list
-      - watch
-  # needed for otelcol.processor.k8sattributes
-  - apiGroups: ["apps"]
-    resources: ["replicasets"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["extensions"]
-    resources: ["replicasets"]
-    verbs: ["get", "list", "watch"]
+    - get
 ---
 # Source: k8s-monitoring/charts/alloy-logs/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -66851,99 +66865,113 @@ kind: ClusterRole
 metadata:
   name: k8smon-alloy-logs
   labels:
-    helm.sh/chart: alloy-logs-0.6.1
+    helm.sh/chart: alloy-logs-1.5.0
     app.kubernetes.io/name: alloy-logs
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
 rules:
-  # Rules which allow discovery.kubernetes to function.
   - apiGroups:
-      - ""
-      - "discovery.k8s.io"
-      - "networking.k8s.io"
+    - ""
+    - discovery.k8s.io
+    - networking.k8s.io
     resources:
-      - endpoints
-      - endpointslices
-      - ingresses
-      - nodes
-      - nodes/proxy
-      - nodes/metrics
-      - pods
-      - services
+    - endpoints
+    - endpointslices
+    - ingresses
+    - pods
+    - services
     verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow loki.source.kubernetes and loki.source.podlogs to work.
+    - get
+    - list
+    - watch
   - apiGroups:
-      - ""
+    - ""
     resources:
-      - pods
-      - pods/log
-      - namespaces
+    - pods
+    - pods/log
+    - namespaces
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
   - apiGroups:
-      - "monitoring.grafana.com"
+    - monitoring.grafana.com
     resources:
-      - podlogs
+    - podlogs
     verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow mimir.rules.kubernetes to work.
-  - apiGroups: ["monitoring.coreos.com"]
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
     resources:
-      - prometheusrules
+    - prometheusrules
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - alertmanagerconfigs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - podmonitors
+    - servicemonitors
+    - probes
+    - scrapeconfigs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - events
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    - secrets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - apps
+    - extensions
+    resources:
+    - replicasets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - nodes
+    - nodes/proxy
+    - nodes/metrics
+    verbs:
+    - get
+    - list
+    - watch
   - nonResourceURLs:
-      - /metrics
+    - /metrics
     verbs:
-      - get
-  # Rules for prometheus.kubernetes.*
-  - apiGroups: ["monitoring.coreos.com"]
-    resources:
-      - podmonitors
-      - servicemonitors
-      - probes
-    verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow eventhandler to work.
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - get
-      - list
-      - watch
-  # needed for remote.kubernetes.*
-  - apiGroups: [""]
-    resources:
-      - "configmaps"
-      - "secrets"
-    verbs:
-      - get
-      - list
-      - watch
-  # needed for otelcol.processor.k8sattributes
-  - apiGroups: ["apps"]
-    resources: ["replicasets"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["extensions"]
-    resources: ["replicasets"]
-    verbs: ["get", "list", "watch"]
+    - get
 ---
 # Source: k8s-monitoring/charts/alloy/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -66951,99 +66979,113 @@ kind: ClusterRole
 metadata:
   name: k8smon-alloy
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
 rules:
-  # Rules which allow discovery.kubernetes to function.
   - apiGroups:
-      - ""
-      - "discovery.k8s.io"
-      - "networking.k8s.io"
+    - ""
+    - discovery.k8s.io
+    - networking.k8s.io
     resources:
-      - endpoints
-      - endpointslices
-      - ingresses
-      - nodes
-      - nodes/proxy
-      - nodes/metrics
-      - pods
-      - services
+    - endpoints
+    - endpointslices
+    - ingresses
+    - pods
+    - services
     verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow loki.source.kubernetes and loki.source.podlogs to work.
+    - get
+    - list
+    - watch
   - apiGroups:
-      - ""
+    - ""
     resources:
-      - pods
-      - pods/log
-      - namespaces
+    - pods
+    - pods/log
+    - namespaces
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
   - apiGroups:
-      - "monitoring.grafana.com"
+    - monitoring.grafana.com
     resources:
-      - podlogs
+    - podlogs
     verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow mimir.rules.kubernetes to work.
-  - apiGroups: ["monitoring.coreos.com"]
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
     resources:
-      - prometheusrules
+    - prometheusrules
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - alertmanagerconfigs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - podmonitors
+    - servicemonitors
+    - probes
+    - scrapeconfigs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - events
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    - secrets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - apps
+    - extensions
+    resources:
+    - replicasets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - nodes
+    - nodes/proxy
+    - nodes/metrics
+    verbs:
+    - get
+    - list
+    - watch
   - nonResourceURLs:
-      - /metrics
+    - /metrics
     verbs:
-      - get
-  # Rules for prometheus.kubernetes.*
-  - apiGroups: ["monitoring.coreos.com"]
-    resources:
-      - podmonitors
-      - servicemonitors
-      - probes
-    verbs:
-      - get
-      - list
-      - watch
-  # Rules which allow eventhandler to work.
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - get
-      - list
-      - watch
-  # needed for remote.kubernetes.*
-  - apiGroups: [""]
-    resources:
-      - "configmaps"
-      - "secrets"
-    verbs:
-      - get
-      - list
-      - watch
-  # needed for otelcol.processor.k8sattributes
-  - apiGroups: ["apps"]
-    resources: ["replicasets"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["extensions"]
-    resources: ["replicasets"]
-    verbs: ["get", "list", "watch"]
+    - get
 ---
 # Source: k8s-monitoring/charts/kube-state-metrics/templates/role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -67294,11 +67336,10 @@ kind: ClusterRoleBinding
 metadata:
   name: k8smon-alloy-events
   labels:
-    helm.sh/chart: alloy-events-0.6.1
+    helm.sh/chart: alloy-events-1.5.0
     app.kubernetes.io/name: alloy-events
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
@@ -67317,11 +67358,10 @@ kind: ClusterRoleBinding
 metadata:
   name: k8smon-alloy-logs
   labels:
-    helm.sh/chart: alloy-logs-0.6.1
+    helm.sh/chart: alloy-logs-1.5.0
     app.kubernetes.io/name: alloy-logs
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
@@ -67340,11 +67380,10 @@ kind: ClusterRoleBinding
 metadata:
   name: k8smon-alloy
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: rbac
@@ -67406,12 +67445,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8smon-alloy-events
+  namespace: default
   labels:
-    helm.sh/chart: alloy-events-0.6.1
+    helm.sh/chart: alloy-events-1.5.0
     app.kubernetes.io/name: alloy-events
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: networking
@@ -67432,12 +67471,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8smon-alloy-logs-cluster
+  namespace: default
   labels:
-    helm.sh/chart: alloy-logs-0.6.1
+    helm.sh/chart: alloy-logs-1.5.0
     app.kubernetes.io/name: alloy-logs
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: networking
@@ -67465,12 +67504,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8smon-alloy-logs
+  namespace: default
   labels:
-    helm.sh/chart: alloy-logs-0.6.1
+    helm.sh/chart: alloy-logs-1.5.0
     app.kubernetes.io/name: alloy-logs
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: networking
@@ -67491,12 +67530,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8smon-alloy-cluster
+  namespace: default
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: networking
@@ -67556,12 +67595,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8smon-alloy
+  namespace: default
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
     app.kubernetes.io/component: networking
@@ -67666,11 +67705,10 @@ kind: Service
 metadata:
   name: k8smon-grafana-agent
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
 spec:
@@ -67722,12 +67760,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8smon-alloy-events
+  namespace: default
   labels:
-    helm.sh/chart: alloy-events-0.6.1
+    helm.sh/chart: alloy-events-1.5.0
     app.kubernetes.io/name: alloy-events
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
 spec:
@@ -67749,7 +67787,7 @@ spec:
       serviceAccountName: k8smon-alloy-events
       containers:
         - name: alloy
-          image: docker.io/grafana/alloy:v1.3.1
+          image: docker.io/grafana/alloy:v1.12.0
           imagePullPolicy: IfNotPresent
           args:
             - run
@@ -67779,17 +67817,17 @@ spec:
             - name: config
               mountPath: /etc/alloy
         - name: config-reloader
-          image: ghcr.io/jimmidyson/configmap-reload:v0.12.0
+          image: quay.io/prometheus-operator/prometheus-config-reloader:v0.81.0
           args:
-            - --volume-dir=/etc/alloy
-            - --webhook-url=http://localhost:12345/-/reload
+            - --watched-dir=/etc/alloy
+            - --reload-url=http://localhost:12345/-/reload
           volumeMounts:
             - name: config
               mountPath: /etc/alloy
           resources:
             requests:
-              cpu: 1m
-              memory: 5Mi
+              cpu: 10m
+              memory: 50Mi
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
@@ -67803,12 +67841,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8smon-alloy-logs
+  namespace: default
   labels:
-    helm.sh/chart: alloy-logs-0.6.1
+    helm.sh/chart: alloy-logs-1.5.0
     app.kubernetes.io/name: alloy-logs
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
 spec:
@@ -67830,7 +67868,7 @@ spec:
       serviceAccountName: k8smon-alloy-logs
       containers:
         - name: alloy
-          image: docker.io/grafana/alloy:v1.3.1
+          image: docker.io/grafana/alloy:v1.12.0
           imagePullPolicy: IfNotPresent
           args:
             - run
@@ -67862,17 +67900,17 @@ spec:
             - name: config
               mountPath: /etc/alloy
         - name: config-reloader
-          image: ghcr.io/jimmidyson/configmap-reload:v0.12.0
+          image: quay.io/prometheus-operator/prometheus-config-reloader:v0.81.0
           args:
-            - --volume-dir=/etc/alloy
-            - --webhook-url=http://localhost:12345/-/reload
+            - --watched-dir=/etc/alloy
+            - --reload-url=http://localhost:12345/-/reload
           volumeMounts:
             - name: config
               mountPath: /etc/alloy
           resources:
             requests:
-              cpu: 1m
-              memory: 5Mi
+              cpu: 10m
+              memory: 50Mi
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
@@ -68095,12 +68133,12 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: k8smon-alloy
+  namespace: default
   labels:
-    helm.sh/chart: alloy-0.6.1
+    helm.sh/chart: alloy-1.5.0
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: k8smon
-    
-    app.kubernetes.io/version: "v1.3.1"
+    app.kubernetes.io/version: "v1.12.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: alloy
 spec:
@@ -68124,7 +68162,7 @@ spec:
       serviceAccountName: k8smon-alloy
       containers:
         - name: alloy
-          image: docker.io/grafana/alloy:v1.3.1
+          image: docker.io/grafana/alloy:v1.12.0
           imagePullPolicy: IfNotPresent
           args:
             - run
@@ -68180,17 +68218,17 @@ spec:
             - name: config
               mountPath: /etc/alloy
         - name: config-reloader
-          image: ghcr.io/jimmidyson/configmap-reload:v0.12.0
+          image: quay.io/prometheus-operator/prometheus-config-reloader:v0.81.0
           args:
-            - --volume-dir=/etc/alloy
-            - --webhook-url=http://localhost:12345/-/reload
+            - --watched-dir=/etc/alloy
+            - --reload-url=http://localhost:12345/-/reload
           volumeMounts:
             - name: config
               mountPath: /etc/alloy
           resources:
             requests:
-              cpu: 1m
-              memory: 5Mi
+              cpu: 10m
+              memory: 50Mi
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
@@ -69292,7 +69330,7 @@ spec:
         kubernetes.io/os: linux
   containers:
     - name: alloy
-      image: "docker.io/grafana/alloy:v1.3.1"
+      image: "docker.io/grafana/alloy:v1.12.0"
       command:
       - bash
       - -c
